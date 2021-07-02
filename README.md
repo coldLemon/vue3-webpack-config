@@ -1,2 +1,1 @@
-# vue3-webpack-base
-# vue3-webpack-config
+vue3.0 webpack5 基本配置
