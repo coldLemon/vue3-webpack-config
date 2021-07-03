@@ -22,4 +22,4 @@ app.config.errorHandler = (err,vm,info)=>{
 app.config.performance = false
 
 
-mount('#app')
+app.mount('#app')
