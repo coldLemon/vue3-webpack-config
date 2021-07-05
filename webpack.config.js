@@ -1,14 +1,12 @@
+'use strict'
+
 const path = require('path');
 const {VueLoaderPlugin}  = require('vue-loader'); 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); 
-const SpeedMesurePlugin = require('speed-measure-webpack-plugin');
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer');
  
-const smp = new SpeedMesurePlugin()
-const webpackConfig = {
-  // mode:'production',
-  mode: 'development',
+module.exports = {
+
   entry:  "./src/index.js",
   output: {
     path: path.join(__dirname, '/dist'),
@@ -74,7 +72,6 @@ const webpackConfig = {
     }),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(), 
-    new BundleAnalyzerPlugin.BundleAnalyzerPlugin(),
   ],
   resolve:{
     extensions:['.js','.vue','.json'],//可以不加扩展名
@@ -84,4 +81,3 @@ const webpackConfig = {
     }
   },
 }
-module.exports =  smp.wrap(webpackConfig)
