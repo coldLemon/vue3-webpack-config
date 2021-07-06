@@ -2,15 +2,15 @@
 
 const path = require('path');
 const {VueLoaderPlugin}  = require('vue-loader'); 
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin'); 
  
 module.exports = {
 
   entry:  "./src/index.js",
-  output: {
-    path: path.join(__dirname, '/dist'),
-    filename: "[name].[hash:16].js"
+  output: { 
+    path: path.join(__dirname, '/dist'), //output.path 中的 URL 以 HTML 页面为基准
+    filename: "[name].[hash:16].js",
+    publicPath:'/'  //次项作为按需加载与加载外部资源的基准
   },
   module: {
     rules: [
@@ -63,21 +63,25 @@ module.exports = {
     ]
   },
   plugins: [
-    new HtmlWebpackPlugin({
-      title: 'vue',
-      template: path.resolve(__dirname,'index.html'),
-      filename: "index.html",
-      inject:'body',
-
-    }),
     new VueLoaderPlugin(),
     new CleanWebpackPlugin(), 
   ],
+  optimization:{
+    removeAvailableModules: true,
+    // webpack 将会不会去打包一个空的模块。
+    removeEmptyChunks: true,
+    // 告诉 webpack 合并一些包含了相同模块的模块。
+    mergeDuplicateChunks: true,
+    // 会在 process.env.NODE_ENV 中传入当前的 mode 环境。
+    // nodeEnv: "production" || "development"
+  },
   resolve:{
     extensions:['.js','.vue','.json'],//可以不加扩展名
     alias:{
+      '@': path.resolve('src'),
       Components : path.resolve(__dirname,'src/components/'),
       Pages: path.resolve(__dirname,'src/pages/')
     }
   },
+  
 }
