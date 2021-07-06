@@ -29,6 +29,27 @@ module.exports = {
               limit:5 * 1024
             },
           },
+          {
+            loader: 'image-webpack-loader',
+            options: {
+                mozjpeg: {
+                    progressive: true,
+                },
+                optipng: {
+                    enabled: false,
+                },
+                pngquant: {
+                    quality: [0.65, 0.90],
+                    speed: 4
+                },
+                gifsicle: {
+                    interlaced: false,
+                },
+                webp: {
+                    quality: 75
+                }
+            }
+          }
         ]
       },
       {
@@ -44,6 +65,10 @@ module.exports = {
         ],
    
         exclude: /node_modules/
+      },
+      {
+        test: /\.ts$/,
+        use: 'ts-loader'
       },
       {
         test:/\.(eot|woff2|woff|ttf|svg|mp4|mp3|ogg|wav|aac)/,

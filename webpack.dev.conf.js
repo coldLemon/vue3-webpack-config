@@ -8,6 +8,7 @@ const BundleAnalyzerPlugin = require('webpack-bundle-analyzer');
 const SpeedMesurePlugin = require('speed-measure-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
+var portfinder = require("portfinder");
 
 const smp = new SpeedMesurePlugin()
 
@@ -30,7 +31,7 @@ const devConfig = merge(webpackBaseConfig,{
     // 告诉 webpack-dev-server 搭建服务器的时候从哪里获取静态文件
     // 默认情况下，将使用当前工作目录作为提供静态文件的目录
     contentBase: path.join(__dirname, 'dist'), // since we use CopyWebpackPlugin. 
-    port: '8088',
+    port: 8088,
     open:true,
     hot:true,   //模块热更新，不会直接刷新浏览器，影响已经渲染的js模块
     hotOnly:true,//就算没渲染好，也不直接刷新
@@ -66,7 +67,7 @@ const devConfig = merge(webpackBaseConfig,{
      providedExports: true,
      // 找到 chunk 中共享的模块，取出来生成单独的 chunk。
      runtimeChunk: true,
-     // 给模块更有意义更方便调试的名称。
+     // 给模块更有意义更方便调试的名称。这下二为Webpack5
      moduleIds: 'named',
      // 给 chunk 更有意义更方便调试的名称。
      chunkIds: 'named',
@@ -74,5 +75,27 @@ const devConfig = merge(webpackBaseConfig,{
 
 })
 
+
+module.exports = new Promise((resolve,reject) => {
+  portfinder.basePort = devConfig.devServer.port
+  portfinder.getPort((err,port) => {
+    if (err) reject(err)
+    else {
+      devConfig.devServer.port = port
+      devConfig.plugins.push(new FriendlyErrorsPlugin({
+        // 清除控制台原有的信息
+        clearConsole: true,
+        compilationSuccessInfo: {
+          messages: [`Your application is running here: http://${devConfig.devServer.host}:${port}`]
+        },
+        onErrors: () => { console.log("your application defeat") }
+      }))
+      resolve(devConfig)
+    }
+  })
+})
+
+
+
 // module.exports = smp.wrap(devConfig)
-module.exports = devConfig
+// module.exports = devConfig
