@@ -7,6 +7,7 @@ const path = require('path')
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer');
 const SpeedMesurePlugin = require('speed-measure-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 
 const smp = new SpeedMesurePlugin()
 
@@ -37,7 +38,7 @@ const devConfig = merge(webpackBaseConfig,{
     // proxy: , 代理
     // 启用 quiet 后，除了初始启动信息之外的任何内容都不会被打印到控制台
     // 和 FriendlyErrorsPlugin 配合食用更佳
-    // quiet: true
+    quiet: true
   },
   plugins:[
     new BundleAnalyzerPlugin.BundleAnalyzerPlugin(),
@@ -49,6 +50,16 @@ const devConfig = merge(webpackBaseConfig,{
 
     }),
     // new webpack.HotModuleReplacementPlugin()
+    new FriendlyErrorsPlugin({
+      // compilationSuccessInfo: {
+      //   messages: [`Your application is running here: http://${devConfig.devServer.host}:${port}`],
+      //   onErrors: function (severity, errors) {
+      //     // You can listen to errors transformed and prioritized by the plugin
+      //     // severity can be 'error' or 'warning'
+      //   },
+      //   clearConsole: true,
+      // },
+    })
   ],
   optimization:{
      // 在可能的情况下确定每个模块的导出。
