@@ -11,9 +11,10 @@ const smp = new SpeedMesurePlugin()
 
 const devConfig = merge(webpackBaseConfig,{
   mode: 'development',
-  devtool:'cheap-module-eval-source-map',
+  devtool:'eval-source-map',
   devServer:{
     //会把打包的东西放到内存里面
+    contentBase: path.join(__dirname, 'dist'),
     port: '8088',
     open:true,
     hot:true,   //模块热更新，不会直接刷新浏览器，影响已经渲染的js模块

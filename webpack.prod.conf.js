@@ -7,7 +7,7 @@ const path = require('path')
 
 const prodConfig = {
   mode: 'production',
-  devtool:'cheap-module-source-map',
+  devtool:'nosources-source-map',
 }
 
 module.exports = merge(webpackBaseConfig, prodConfig)
