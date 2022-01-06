@@ -60,7 +60,8 @@ const devConfig = merge(webpackBaseConfig, {
       title: 'vue3.0',
       template: path.resolve(__dirname, 'index.html'),
       filename: 'index.html',
-      inject: 'body'
+      inject: 'body',
+      favicon: './favicon.ico',
     }),
     // new webpack.HotModuleReplacementPlugin()
     new FriendlyErrorsPlugin({
