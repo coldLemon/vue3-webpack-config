@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <h1>hoxxmxe</h1>
+    <h1>home</h1>
   </div>
 </template>
 

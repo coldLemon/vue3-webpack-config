@@ -13,5 +13,13 @@ import { createRouter, createWebHistory } from 'vue-router'
     routes,
   })
 
+  // 路由权限
+  router.beforeEach((to, from, next) => {
+    if(to.path == '/login'){
+      next()
+      return
+    }
+    next()
+  })
   export default router
   

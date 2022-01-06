@@ -1,112 +1,91 @@
 'use strict'
 
-const path = require('path');
-const {VueLoaderPlugin}  = require('vue-loader'); 
-const { CleanWebpackPlugin } = require('clean-webpack-plugin'); 
- 
-module.exports = {
+const path = require('path')
+const { VueLoaderPlugin } = require('vue-loader')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
-  entry:  "./src/index.js",
-  output: { 
+module.exports = {
+  entry: './src/index.js',
+  output: {
     path: path.join(__dirname, '/dist'), //output.path 中的 URL 以 HTML 页面为基准
-    filename: "[name].[hash:16].js",
-    publicPath:'/'  //次项作为按需加载与加载外部资源的基准
+    filename: '[name].[fullhash:16].js',
+    publicPath: '/', //次项作为按需加载与加载外部资源的基准
+    //  非入口文件chunk的名称。所谓非入口即import动态导入形成的trunk或者optimization中的splitChunks提取的公共trunk
+    //   它支持和 filename 一致的内置变量
+    chunkFilename: '[contenthash:10].chunk.js',
+
+    /* 当用 Webpack 去构建一个可以被其他模块导入使用的库时需要用到library */
+    library: {
+      name: '[name]', //整个库向外暴露的变量名
+      type: 'window' //库暴露的方式
+    }
   },
   module: {
     rules: [
-      {     
+      {
         test: /\.vue$/,
         loader: 'vue-loader'
       },
       {
-        test: /\.(png|svg|jpe?g|gif|PNG|JPG)$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[path][name].[ext]',
-              outputPath:'image/',
-              limit:5 * 1024
-            },
-          },
-          {
-            loader: 'image-webpack-loader',
-            options: {
-                mozjpeg: {
-                    progressive: true,
-                },
-                optipng: {
-                    enabled: false,
-                },
-                pngquant: {
-                    quality: [0.65, 0.90],
-                    speed: 4
-                },
-                gifsicle: {
-                    interlaced: false,
-                },
-                webp: {
-                    quality: 75
-                }
-            }
-          }
-        ]
+        test: /\.(css|less)$/,
+        use: ['style-loader', 'css-loader', 'less-loader']
       },
       {
-        test: /\.(css|less|sass)$/,
-        use: [
-          'css-loader', 'less-loader'
-        ],
-      },
-      {
-        test: '/\.js$/',
-        use:[
-          'babel-loader'
-        ],
-   
+        test: '/.js$/',
+        use: ['babel-loader'],
+
         exclude: /node_modules/
       },
       {
-        test: /\.ts$/,
-        use: 'ts-loader'
+        test: /\.(eot|svg|ttf|woff|)$/,
+        type: 'asset/resource',
+        generator: {
+          // 输出文件位置以及文件名
+          filename: 'fonts/[name][ext]'
+        }
       },
       {
-        test:/\.(eot|woff2|woff|ttf|svg|mp4|mp3|ogg|wav|aac)/,
-        use:[
-          {
-            loader:'url-loader',
-            options:{
-              name:'[name][hash:5].min.[ext]',
-              limit:5000,
-              publicPath:'',
-              outputPath:'text/',
-              useRelativePath:true
-            }
+        test: /\.(png|jpe?g|gif|)$/,
+        type: 'asset/resource',
+        generator: {
+          // 输出文件位置以及文件名
+          filename: 'assets/[hash:8].[name][ext]'
+        },
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024 //超过10kb不转base64
           }
-        ]
+        }
       }
     ]
   },
   plugins: [
     new VueLoaderPlugin(),
-    new CleanWebpackPlugin(), 
+    new CleanWebpackPlugin()
+    // new MiniCssExtractPlugin({
+    //   filename: "[name].[hash].css",
+    //   chunkFilename: "[id].css",
+    // }),
   ],
-  optimization:{
+  externals: {
+    BMap: 'BMap'
+  },
+  optimization: {
     removeAvailableModules: true,
     // webpack 将会不会去打包一个空的模块。
     removeEmptyChunks: true,
     // 告诉 webpack 合并一些包含了相同模块的模块。
-    mergeDuplicateChunks: true,
+    mergeDuplicateChunks: true
     // 会在 process.env.NODE_ENV 中传入当前的 mode 环境。
     // nodeEnv: "production" || "development"
   },
-  resolve:{
-    extensions:['.js','.vue','.json'],//可以不加扩展名
-    alias:{
+  resolve: {
+    extensions: ['.js', '.vue', '.json'], //可以不加扩展名
+    alias: {
       '@': path.resolve('src'),
-      Components : path.resolve(__dirname,'src/components/'),
-      Pages: path.resolve(__dirname,'src/pages/')
+      Components: path.resolve(__dirname, 'src/components/'),
+      Pages: path.resolve(__dirname, 'src/pages/')
     }
-  },
-  
+  }
 }

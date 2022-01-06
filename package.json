@@ -1,8 +1,27 @@
 {
-  "name": "water-quality",
+  "name": "vue3",
   "version": "1.0.0",
+  "description": "A Vue.js project",
+  "author": {
+    "name": "lidazhao",
+    "email": "540970517@qq.com",
+    "url": "https://juejin.cn/user/2383396938465181"
+  },
+  "contributors": [
+    {
+      "name": "",
+      "email": "",
+      "url": ""
+    }
+  ],
   "main": "index.js",
   "license": "MIT",
+  "keywords": [
+    "vue3",
+    "webpack5"
+  ],
+  "repository": "github.com/coldLemon/vue3-webpack-config",
+  "private": true,
   "scripts": {
     "start": "webpack server --inline --progress --config webpack.dev.conf.js --open",
     "build": "webpack --mode production",
